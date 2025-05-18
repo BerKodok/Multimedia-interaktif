@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UMKM Katalog Interaktif</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial;
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    header {
+      background: #ff9800;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    nav {
+      background: #fff3e0;
+      padding: 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #ff9800;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 2rem;
+    }
+
+    .promo {
+      background: #ffc107;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .promo-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .product img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .product .price {
+      color: #e53935;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .product h3 {
+      margin-top: 0.5rem;
+    }
+
+    .product input {
+      width: 60px;
+      margin-top: 10px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    button, .view-button {
+      background: #ff9800;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #ff9800;
+      color: white;
+      margin-top: 2rem;
+    }
+
+    .cart-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ff9800;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 100;
+    }
+
+    .cart-panel {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: white;
+      border: 2px solid #ff9800;
+      border-radius: 10px;
+      padding: 1rem;
+      width: 260px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 101;
+    }
+
+    .cart-panel h3 {
+      margin-top: 0;
+    }
+
+    .cart-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+    }
+
+    .cart-panel li {
+      margin-bottom: 5px;
+    }
+
+    #notif-kupon {
+      display: none;
+      background: #4caf50;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 5px;
+      z-index: 999;
+    }
+
+    .checkout-container {
+      max-width: 400px;
+      margin: 30px auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .checkout-container ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    .checkout-container li {
+      border-bottom: 1px solid #eee;
+      padding: 5px 0;
+    }
+
+    .payment-method {
+      margin-top: 20px;
+    }
+
+    .payment-method label {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    #checkout-section {
+      display: none;
+    }
+
+    .total {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="notif-kupon">Kode berhasil diklaim!</div>
+  <header>
+    <h1>Bakso Aci Khas Garut "Mang Cecep"</h1>
+    <div id="points-display">Poin Anda: 0</div>
+  </header>
+
+  <nav>
+    <a href="#">Beranda</a>
+    <a href="#">Produk</a>
+    <a href="katalog.pdf" target="_blank">Katalog PDF</a>
+  </nav>
+
+  <div class="container" id="main-section">
+    <div class="promo">
+      <img src="diskon.png" alt="Promo Banner" class="promo-image">
+      <p>Gunakan kode promo <strong>AKUSUKAACI</strong> untuk diskon 20%!</p>
+      <button onclick="claimCoupon()">Klaim Kupon</button>
+    </div>
+
+    <div class="products-grid">
+      <div class="product">
+        <img src="bakso2.jpg" alt="Produk 1">
+        <div class="price">Rp15.000</div>
+        <h3>Bakso Aci Polos</h3>
+        <p>Bakso Aci khas Garut non-pedas, 100% halal & tanpa pengawet.</p>
+        <input type="number" id="qty1" value="1" min="1">
+        <button onclick="addToCart('Bakso Aci Polos', document.getElementById('qty1').value)">Checkout</button>
+      </div>
+
+      <div class="product">
+        <img src="baksopedas.jpg" alt="Produk 2">
+        <div class="price">Rp17.000</div>
+        <h3>Bakso Aci Pedas</h3>
+        <p>Varian pedas untuk pecinta sensasi, dilengkapi cuanki & pilus!</p>
+        <input type="number" id="qty2" value="1" min="1">
+        <button onclick="addToCart('Bakso Aci Pedas', document.getElementById('qty2').value)">Checkout</button>
+      </div>
+    </div>
+
+    <h3>Video Promosi</h3>
+    <iframe src="https://www.youtube.com/embed/-eUZaz9lyDU" allowfullscreen></iframe>
+  </div>
+
+  <div id="checkout-section" class="checkout-container">
+    <h2>Konfirmasi Pembayaran</h2>
+    <ul id="checkout-list"></ul>
+    <div class="total" id="total-items"></div>
+
+    <div class="payment-method">
+      <h3>Metode Pembayaran</h3>
+      <label><input type="radio" name="metode" value="QRIS" checked> QRIS</label>
+      <label><input type="radio" name="metode" value="Tunai"> Tunai</label>
+    </div>
+    <button onclick="confirmPayment()">Konfirmasi dan Bayar</button>
+  </div>
+
+  <footer>
+    &copy; 2025 Bakso Aci Mang Cecep. All rights reserved.
+  </footer>
+
+  <div class="cart-float" onclick="toggleCart()">
+    🛒 Keranjang (<span id="cart-count">0</span>)
+  </div>
+
+  <div id="cart-panel" class="cart-panel">
+    <h3>Keranjang</h3>
+    <ul id="cart-items"></ul>
+    <div style="display: flex; justify-content: space-between; gap: 10px;">
+      <button onclick="clearCart()" style="flex:1;">Hapus Semua</button>
+      <button onclick="goToCheckout()" style="flex:1;">Bayar</button>
+    </div>
+  </div>
+
+  <script>
+    let points = localStorage.getItem("userPoints") || 0;
+    document.getElementById("points-display").innerText = "Poin Anda: " + points;
+
+    let cart = [];
+
+    function claimCoupon() {
+      const notif = document.getElementById("notif-kupon");
+      notif.style.display = "block";
+      setTimeout(() => notif.style.display = "none", 3000);
+    }
+
+    function addToCart(productName, quantity) {
+      quantity = parseInt(quantity);
+      const existing = cart.find(item => item.name === productName);
+      if (existing) {
+        existing.qty += quantity;
+      } else {
+        cart.push({ name: productName, qty: quantity });
+      }
+      updateCartCount();
+      renderCartItems();
+    }
+
+    function updateCartCount() {
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById("cart-count").innerText = totalItems;
+    }
+
+    function toggleCart() {
+      const panel = document.getElementById("cart-panel");
+      panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "block" : "none";
+    }
+
+    function renderCartItems() {
+      const ul = document.getElementById("cart-items");
+      ul.innerHTML = "";
+      cart.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} (${item.qty})`;
+        ul.appendChild(li);
+      });
+    }
+
+    function clearCart() {
+      if (confirm("Yakin ingin menghapus semua isi keranjang?")) {
+        cart = [];
+        updateCartCount();
+        renderCartItems();
+      }
+    }
+
+    function goToCheckout() {
+      if (cart.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+      }
+      document.getElementById("main-section").style.display = "none";
+      document.getElementById("checkout-section").style.display = "block";
+
+      const list = document.getElementById("checkout-list");
+      const totalDisplay = document.getElementById("total-items");
+      list.innerHTML = "";
+
+      let totalQty = 0;
+      cart.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} (${item.qty})`;
+        totalQty += item.qty;
+        list.appendChild(li);
+      });
+      totalDisplay.textContent = `Total Item: ${totalQty}`;
+      document.getElementById("cart-panel").style.display = "none";
+    }
+
+    function confirmPayment() {
+      const metode = document.querySelector('input[name="metode"]:checked').value;
+      alert("Pembayaran berhasil dengan metode: " + metode + ". Terima kasih!");
+      cart = [];
+      updateCartCount();
+      document.getElementById("checkout-section").style.display = "none";
+      document.getElementById("main-section").style.display = "block";
+    }
+  </script>
+</body>
+</html>
